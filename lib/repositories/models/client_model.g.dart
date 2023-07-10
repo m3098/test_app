@@ -11,13 +11,12 @@ ClientModel _$ClientModelFromJson(Map<String, dynamic> json) => ClientModel(
           ? null
           : _ClientInfoModel.fromJson(
               json['client_info'] as Map<String, dynamic>),
-      oauthClient: json['oauth_client'] == null
-          ? null
-          : _OauthClientModel.fromJson(
-              json['oauth_client'] as Map<String, dynamic>),
-      apiKeyModel: json['api_key'] == null
-          ? null
-          : _ApiKeyModel.fromJson(json['api_key'] as Map<String, dynamic>),
+      oauthClients: (json['oauth_client'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
+      apiKeys: (json['api_key'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
       services: json['services'] == null
           ? null
           : _ServicesModel.fromJson(json['services'] as Map<String, dynamic>),
@@ -26,8 +25,8 @@ ClientModel _$ClientModelFromJson(Map<String, dynamic> json) => ClientModel(
 Map<String, dynamic> _$ClientModelToJson(ClientModel instance) =>
     <String, dynamic>{
       'client_info': instance.clientInfo,
-      'oauth_client': instance.oauthClient,
-      'api_key': instance.apiKeyModel,
+      'oauth_client': instance.oauthClients,
+      'api_key': instance.apiKeys,
       'services': instance.services,
     };
 
@@ -58,27 +57,6 @@ Map<String, dynamic> _$AndroidClientInfoModelToJson(
       'package_name': instance.packageName,
     };
 
-_OauthClientModel _$OauthClientModelFromJson(Map<String, dynamic> json) =>
-    _OauthClientModel(
-      clientId: json['client_id'] as String?,
-      clientType: json['client_type'] as int?,
-    );
-
-Map<String, dynamic> _$OauthClientModelToJson(_OauthClientModel instance) =>
-    <String, dynamic>{
-      'client_id': instance.clientId,
-      'client_type': instance.clientType,
-    };
-
-_ApiKeyModel _$ApiKeyModelFromJson(Map<String, dynamic> json) => _ApiKeyModel(
-      currentKey: json['current_key'] as String?,
-    );
-
-Map<String, dynamic> _$ApiKeyModelToJson(_ApiKeyModel instance) =>
-    <String, dynamic>{
-      'current_key': instance.currentKey,
-    };
-
 _ServicesModel _$ServicesModelFromJson(Map<String, dynamic> json) =>
     _ServicesModel(
       appinviteService: json['appinvite_service'] == null
@@ -95,28 +73,14 @@ Map<String, dynamic> _$ServicesModelToJson(_ServicesModel instance) =>
 _AppinviteServiceModel _$AppinviteServiceModelFromJson(
         Map<String, dynamic> json) =>
     _AppinviteServiceModel(
-      otherPlatformOauthClient: json['other_platform_oauth_client'] == null
-          ? null
-          : _OtherPlatformOauthClientModel.fromJson(
-              json['other_platform_oauth_client'] as Map<String, dynamic>),
+      otherPlatformOauthClients:
+          (json['other_platform_oauth_client'] as List<dynamic>?)
+              ?.map((e) => e as Map<String, dynamic>)
+              .toList(),
     );
 
 Map<String, dynamic> _$AppinviteServiceModelToJson(
         _AppinviteServiceModel instance) =>
     <String, dynamic>{
-      'other_platform_oauth_client': instance.otherPlatformOauthClient,
-    };
-
-_OtherPlatformOauthClientModel _$OtherPlatformOauthClientModelFromJson(
-        Map<String, dynamic> json) =>
-    _OtherPlatformOauthClientModel(
-      clientId: json['client_id'] as String?,
-      clientType: json['client_type'] as int?,
-    );
-
-Map<String, dynamic> _$OtherPlatformOauthClientModelToJson(
-        _OtherPlatformOauthClientModel instance) =>
-    <String, dynamic>{
-      'client_id': instance.clientId,
-      'client_type': instance.clientType,
+      'other_platform_oauth_client': instance.otherPlatformOauthClients,
     };

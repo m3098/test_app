@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../repositories/app_repositpry.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -8,7 +10,11 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Center(
-          child: OutlinedButton(onPressed: () {}, child: const Text("open")),
+          child: OutlinedButton(
+              onPressed: () async {
+                await AppRepositroy().getClient();
+              },
+              child: const Text("open")),
         ),
       ),
     );

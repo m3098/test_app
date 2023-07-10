@@ -10,16 +10,32 @@ class ClientModel extends Equatable {
   final _ClientInfoModel? clientInfo;
 
   @JsonKey(name: 'oauth_client')
-  final _OauthClientModel? oauthClient;
+  final List<Map<String, dynamic>>? oauthClients; //что это за api блин такое
+
+  @JsonKey(ignore: true)
+  late final _OauthClientModel oauthClient;
 
   @JsonKey(name: 'api_key')
-  final _ApiKeyModel? apiKeyModel;
+  final List<Map<String, dynamic>>? apiKeys;
+
+  @JsonKey(ignore: true)
+  late final _ApiKeyModel? apiKey;
 
   @JsonKey(name: 'services')
   final _ServicesModel? services;
 
-  const ClientModel(
-      {this.clientInfo, this.oauthClient, this.apiKeyModel, this.services});
+  ClientModel({
+    this.clientInfo,
+    this.oauthClients,
+    this.apiKeys,
+    this.services,
+  }) {
+    oauthClient = _OauthClientModel(
+      clientId: oauthClients?[0]['client_id'],
+      clientType: oauthClients?[0]['client_type'],
+    );
+    apiKey = _ApiKeyModel(currentKey: apiKeys?[0]['current_key']);
+  }
 
   factory ClientModel.fromJson(Map<String, dynamic> json) =>
       _$ClientModelFromJson(json);
@@ -27,7 +43,7 @@ class ClientModel extends Equatable {
   Map<String, dynamic> toJson() => _$ClientModelToJson(this);
 
   @override
-  List<Object?> get props => [clientInfo, oauthClient, apiKeyModel, services];
+  List<Object?> get props => [clientInfo, oauthClient, apiKey, services];
 }
 
 @JsonSerializable()
@@ -65,35 +81,21 @@ class _AndroidClientInfoModel extends Equatable {
   List<Object?> get props => [packageName];
 }
 
-@JsonSerializable()
 class _OauthClientModel extends Equatable {
-  @JsonKey(name: 'client_id')
   final String? clientId;
-  @JsonKey(name: 'client_type')
+
   final int? clientType;
 
   const _OauthClientModel({this.clientId, this.clientType});
-
-  factory _OauthClientModel.fromJson(Map<String, dynamic> json) =>
-      _$OauthClientModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$OauthClientModelToJson(this);
 
   @override
   List<Object?> get props => [clientId, clientType];
 }
 
-@JsonSerializable()
 class _ApiKeyModel extends Equatable {
-  @JsonKey(name: 'current_key')
   final String? currentKey;
 
   const _ApiKeyModel({this.currentKey});
-
-  factory _ApiKeyModel.fromJson(Map<String, dynamic> json) =>
-      _$ApiKeyModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ApiKeyModelToJson(this);
 
   @override
   List<Object?> get props => [currentKey];
@@ -117,9 +119,15 @@ class _ServicesModel extends Equatable {
 @JsonSerializable()
 class _AppinviteServiceModel extends Equatable {
   @JsonKey(name: 'other_platform_oauth_client')
-  final _OtherPlatformOauthClientModel? otherPlatformOauthClient;
+  final List<Map<String, dynamic>>? otherPlatformOauthClients;
+  @JsonKey(ignore: true)
+  late _OtherPlatformOauthClientModel otherPlatformOauthClient;
 
-  const _AppinviteServiceModel({this.otherPlatformOauthClient});
+  _AppinviteServiceModel({this.otherPlatformOauthClients}) {
+    otherPlatformOauthClient = _OtherPlatformOauthClientModel(
+        clientId: otherPlatformOauthClients?[0]['client_id'],
+        clientType: otherPlatformOauthClients?[0]['client_type']);
+  }
 
   factory _AppinviteServiceModel.fromJson(Map<String, dynamic> json) =>
       _$AppinviteServiceModelFromJson(json);
@@ -130,19 +138,13 @@ class _AppinviteServiceModel extends Equatable {
   List<Object?> get props => [otherPlatformOauthClient];
 }
 
-@JsonSerializable()
 class _OtherPlatformOauthClientModel extends Equatable {
-  @JsonKey(name: 'client_id')
   final String? clientId;
-  @JsonKey(name: 'client_type')
+
   final int? clientType;
 
   const _OtherPlatformOauthClientModel({this.clientId, this.clientType});
 
-  factory _OtherPlatformOauthClientModel.fromJson(Map<String, dynamic> json) =>
-      _$OtherPlatformOauthClientModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$OtherPlatformOauthClientModelToJson(this);
   @override
   List<Object?> get props => [clientId, clientType];
 }
