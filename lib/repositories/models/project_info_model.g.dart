@@ -8,7 +8,7 @@ part of 'project_info_model.dart';
 
 ProjectInfoModel _$ProjectInfoModelFromJson(Map<String, dynamic> json) =>
     ProjectInfoModel(
-      projectNumber: json['project_number'] as int?,
+      projectNumber: json['project_number'] as String?,
       projectId: json['project_id'] as String?,
       storageBucket: json['storage_bucket'] as String?,
     );

@@ -24,6 +24,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
         emit(AppLoaded(webViewController));
       } catch (e) {
+        print(e.toString());
         emit(AppLoadingFailed(e));
       }
     });

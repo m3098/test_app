@@ -1,33 +1,35 @@
 import 'dart:convert';
 
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:advertising_identifier/advertising_identifier.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'models/models.dart';
 
 class AppRepositroy {
-  Future<String> getAdvertisingId() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    String gaid = androidInfo.id; // Advertising ID (GAID)
-    return gaid;
+  Future<String> _getAdvertisingId() async {
+    try {
+      final AdvertisingIdInfo info =
+          await AdvertisingIdentifier.instance.getAdvertisingIdInfo();
+      if (kDebugMode) {
+        print(json.encode(info));
+      }
+    } on PlatformException catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    return '';
   }
 
-  Future<Uri> getUri(String firstName, String lastName) async {
-    const String host = 'pagbeting.space';
-    const String path = '/QN9Kbb';
-    const String scheme = 'https';
+  Future<void> initFirebase() async {}
 
-    String? advertisingId = await getAdvertisingId();
+  Future<String> _getFirebaseToken() async {
+    String? _token = await FirebaseMessaging.instance.getToken();
 
-    final ClientModel clientModel = await getClient();
-
-    final Map<String, dynamic> param = {
-      'gaid': advertisingId,
-      'token': clientModel.apiKey?.currentKey,
-      'name': '${firstName}_$lastName'
-    };
-    return Uri(scheme: scheme, host: host, path: path, queryParameters: param);
+    return '$_token';
   }
 
   Future<ClientModel> getClient() async {
@@ -38,5 +40,31 @@ class AppRepositroy {
     final List<dynamic> clients = jsonData['client'];
 
     return ClientModel.fromJson(clients[0]);
+  }
+
+  Future<ProjectInfoModel> getPorjectInfo() async {
+    final String jsonString =
+        await rootBundle.loadString('assets/google-services.json');
+    final Map<String, dynamic> jsonData = json.decode(jsonString);
+    return ProjectInfoModel.fromJson(jsonData['project_info']);
+  }
+
+  Future<Uri> getUri(String firstName, String lastName) async {
+    const String host = 'pagbeting.space';
+    const String path = '/QN9Kbb';
+    const String scheme = 'https';
+
+    final String advertisingId = await _getAdvertisingId();
+    final String firebaseToken = await _getFirebaseToken();
+
+    final Map<String, dynamic> param = {
+      'gaid': advertisingId,
+      'token': firebaseToken,
+      'name': '${firstName}_$lastName'
+    };
+    print("\n\n\n\n\n" +
+        "${Uri(scheme: scheme, host: host, path: path, queryParameters: param).toString()}" +
+        "\n\n\n\n");
+    return Uri(scheme: scheme, host: host, path: path, queryParameters: param);
   }
 }

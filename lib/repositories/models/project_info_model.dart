@@ -6,7 +6,7 @@ part 'project_info_model.g.dart';
 @JsonSerializable()
 class ProjectInfoModel extends Equatable {
   @JsonKey(name: 'project_number')
-  final int? projectNumber;
+  final String? projectNumber;
   @JsonKey(name: 'project_id')
   final String? projectId;
   @JsonKey(name: 'storage_bucket')
