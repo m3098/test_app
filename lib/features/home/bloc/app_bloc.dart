@@ -11,10 +11,19 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc() : super(AppInitial()) {
     on<OpenWebView>((event, emit) async {
       emit(AppLoading());
-      final Uri uri =
-          await GetIt.I<AppRepositroy>().getUri("Dmitry", "Smirnov");
-      final WebViewController webViewController = WebViewController()
-        ..loadRequest(uri);
+
+      try {
+        final Uri uri =
+            await GetIt.I<AppRepositroy>().getUri("Dmitry", "Smirnov");
+        final WebViewController webViewController = WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..loadRequest(uri);
+        await Future.delayed(const Duration(seconds: 1));
+
+        emit(AppLoaded(webViewController));
+      } catch (e) {
+        emit(AppLoadingFailed(e));
+      }
     });
   }
 }

@@ -7,11 +7,4 @@ abstract class AppEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class OpenWebView extends AppEvent {
-  final Uri uri;
-
-  const OpenWebView({required this.uri});
-
-  @override
-  List<Object> get props => [uri];
-}
+class OpenWebView extends AppEvent {}

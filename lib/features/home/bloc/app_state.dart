@@ -20,4 +20,10 @@ class AppLoaded extends AppState {
   List<Object> get props => [webViewController];
 }
 
-class AppLoadingFailed extends AppState {}
+class AppLoadingFailed extends AppState {
+  final Object exeption;
+
+  const AppLoadingFailed(this.exeption);
+  @override
+  List<Object> get props => [exeption];
+}
