@@ -10,7 +10,7 @@ class ClientModel extends Equatable {
   final _ClientInfoModel? clientInfo;
 
   @JsonKey(name: 'oauth_client')
-  final List<Map<String, dynamic>>? oauthClients; //что это за api блин такое
+  final List<Map<String, dynamic>>? oauthClients;
 
   @JsonKey(ignore: true)
   late final _OauthClientModel oauthClient;
