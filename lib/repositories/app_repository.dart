@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:advertising_identifier/advertising_identifier.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:advertising_info/advertising_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -10,18 +9,11 @@ import 'models/models.dart';
 
 class AppRepositroy {
   Future<String> _getAdvertisingId() async {
-    try {
-      final AdvertisingIdInfo info =
-          await AdvertisingIdentifier.instance.getAdvertisingIdInfo();
-      if (kDebugMode) {
-        print(json.encode(info));
-      }
-    } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-    return '';
+    AdvertisingInfo advertisingInfo;
+
+    advertisingInfo = await AdvertisingInfo.read();
+
+    return advertisingInfo.id.toString();
   }
 
   Future<void> initFirebase() async {}
